@@ -27,12 +27,14 @@ class _Node:
       Size change on demand.
 """
 import math 
+import random 
 
 class SkipList:
-    MAX_LEVEL = 16
-    p = 0.5
+
     def __init__(self):
-        self.head = _Node(MAX_LEVEL, None)
+        self._MAX_LEVEL = 16
+        self._p = 0.5
+        self.head = _Node(_MAX_LEVEL, None)
         self.current_level = 0
         self.size = 0
     
@@ -51,10 +53,12 @@ class SkipList:
     
 
     def __iter__(self):
+        """Iterable behaviour fo skip lists."""
         node = self.head.forward[0]
         while node is not None:
             yield node.data
             node = node.forward[0]
+
 
     def __repr__(self):
         return f"{type(self).__name__}(current_level={self.current_level}, size={self.size})"
@@ -68,7 +72,10 @@ class SkipList:
         pass
 
 
-    def _generate_level(self, p):
-        rand_levels = random.choice([x for x in range(0, 16)], p)
-        return random.choice(rand_levels)
+    def _generate_level(self):
+        """Geometric distribution implementation for generating levels."""
+        level = 0 
+        while random.random() < self.p and level < self.MAX_LEVEL:
+            level += 1
+        return level
 
